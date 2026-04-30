@@ -2,7 +2,9 @@ const { utils: coinUtils } = require('@lamassu/coins')
 const _ = require('lodash/fp')
 const mem = require('mem')
 
+const BN = require('./bn')
 const configManager = require('./new-config-manager')
+const { getRate } = require('./forex')
 const logger = require('./logger')
 const lastRate = {}
 
@@ -56,12 +58,31 @@ const _getRates = (settings, fiatCode, cryptoCode) =>
 
 function buildTicker(fiatCode, cryptoCode, tickerName) {
   fiatCode = _.defaultTo(fiatCode, _.get([fiatCode], PEGGED_FIAT_CURRENCIES))
+
+  if (tickerName === 'spark-usdb') return sparkUsdbTicker(fiatCode, cryptoCode)
+
   cryptoCode = coinUtils.getEquivalentCode(cryptoCode)
 
   if (tickerName === 'bitpay') return bitpay.ticker(fiatCode, cryptoCode)
   if (tickerName === 'mock-ticker')
     return mockTicker.ticker(fiatCode, cryptoCode)
   return ccxt.ticker(fiatCode, cryptoCode, tickerName)
+}
+
+function sparkUsdbTicker(fiatCode, cryptoCode) {
+  if (!['USDB', 'USD'].includes(cryptoCode)) {
+    return Promise.reject(new Error(`Unsupported crypto: ${cryptoCode}`))
+  }
+
+  if (fiatCode === 'USD') {
+    return Promise.resolve({
+      rates: { ask: BN(1), bid: BN(1) },
+    })
+  }
+
+  return getRate(1, fiatCode, 'USD').then(({ fxRate }) => ({
+    rates: { ask: fxRate, bid: fxRate },
+  }))
 }
 
 const getRates = mem(_getRates, {

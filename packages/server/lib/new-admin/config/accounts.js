@@ -5,6 +5,8 @@ const { ALL } = require('../../plugins/common/ccxt')
 
 const { BTC, BCH, DASH, ETH, LTC, USDT, ZEC, XMR, LN, TRX, USDT_TRON, USDC } =
   COINS
+const USDB = COINS.USDB || 'USDB'
+const ALL_CRYPTOS_WITH_USDB = _.uniq([...ALL_CRYPTOS, USDB])
 const { bitpay, itbit, bitstamp, kraken, binanceus, cex, binance, bitfinex } =
   ALL
 
@@ -55,6 +57,12 @@ const ALL_ACCOUNTS = [
   },
   { code: 'itbit', display: 'itBit', class: TICKER, cryptos: itbit.CRYPTO },
   {
+    code: 'spark-usdb',
+    display: 'Spark USDB',
+    class: TICKER,
+    cryptos: [USDB],
+  },
+  {
     code: 'mock-ticker',
     display: 'Mock (Caution!)',
     class: TICKER,
@@ -103,6 +111,7 @@ const ALL_ACCOUNTS = [
     cryptos: [BTC, ZEC, LTC, BCH, DASH],
   },
   { code: 'galoy', display: 'Galoy', class: WALLET, cryptos: [LN] },
+  { code: 'spark', display: 'Spark', class: WALLET, cryptos: [LN, USDB] },
   {
     code: 'bitstamp',
     display: 'Bitstamp',
@@ -140,7 +149,7 @@ const ALL_ACCOUNTS = [
     code: 'no-exchange',
     display: 'No exchange',
     class: EXCHANGE,
-    cryptos: ALL_CRYPTOS,
+    cryptos: ALL_CRYPTOS_WITH_USDB,
   },
   {
     code: 'mock-exchange',
@@ -162,7 +171,12 @@ const ALL_ACCOUNTS = [
   { code: 'inforu', display: 'InforU', class: SMS },
   { code: 'mailgun', display: 'Mailgun', class: EMAIL },
   { code: 'mock-email', display: 'Mock Email', class: EMAIL, dev: true },
-  { code: 'none', display: 'None', class: ZERO_CONF, cryptos: ALL_CRYPTOS },
+  {
+    code: 'none',
+    display: 'None',
+    class: ZERO_CONF,
+    cryptos: ALL_CRYPTOS_WITH_USDB,
+  },
   {
     code: 'blockcypher',
     display: 'Blockcypher',

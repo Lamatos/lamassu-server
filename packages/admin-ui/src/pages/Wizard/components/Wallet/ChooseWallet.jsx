@@ -36,7 +36,7 @@ const SAVE_ACCOUNTS = gql`
 `
 
 const isConfigurable = it =>
-  R.includes(it)(['infura', 'bitgo', 'trongrid', 'galoy'])
+  R.includes(it)(['infura', 'bitgo', 'trongrid', 'galoy', 'spark'])
 
 const isLocalHosted = it =>
   R.includes(it)([
@@ -173,6 +173,19 @@ const ChooseWallet = ({ data: currentData, addData }) => {
             save={saveWallet(selected)}
             elements={schema.galoy.elements}
             validationSchema={schema.galoy.getValidationSchema(accounts.galoy)}
+            buttonLabel={'Continue'}
+            buttonClass={classes.formButton}
+          />
+        </>
+      )}
+      {selected === 'spark' && (
+        <>
+          <H4 noMargin>Enter wallet information</H4>
+          <FormRenderer
+            value={accounts.spark}
+            save={saveWallet(selected)}
+            elements={schema.spark.elements}
+            validationSchema={schema.spark.getValidationSchema(accounts.spark)}
             buttonLabel={'Continue'}
             buttonClass={classes.formButton}
           />

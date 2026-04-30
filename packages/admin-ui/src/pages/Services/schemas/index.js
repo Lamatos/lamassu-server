@@ -13,6 +13,7 @@ import _itbit from './itbit'
 import _kraken from './kraken'
 import mailgun from './mailgun'
 import scorechain from './scorechain'
+import spark from './spark'
 import sumsub from './sumsub'
 import telnyx from './telnyx'
 import trongrid from './trongrid'
@@ -45,6 +46,7 @@ const schemas = (markets = {}) => {
     [binanceus.code]: binanceus,
     [cex.code]: cex,
     [scorechain.code]: scorechain,
+    [spark.code]: spark,
     [trongrid.code]: trongrid,
     [binance.code]: binance,
     [bitfinex.code]: bitfinex,
