@@ -275,6 +275,16 @@ function stripLightningPrefix (address) {
     : address
 }
 
+function hasInvoiceAmountInHrp (invoice) {
+  const lower = invoice.toLowerCase()
+  const sep = lower.lastIndexOf('1')
+  if (sep === -1) return false
+
+  const hrp = lower.slice(0, sep)
+  const match = /^ln(?:bc|tb|bcrt)(\d+[munp]?)?$/.exec(hrp)
+  return Boolean(match && match[1])
+}
+
 function isZeroAmountLightningInvoice (invoice) {
   try {
     const decoded = bolt11.decode(invoice)
@@ -282,7 +292,7 @@ function isZeroAmountLightningInvoice (invoice) {
     const amount = Number(decoded.millisatoshis)
     return Number.isFinite(amount) && amount === 0
   } catch (err) {
-    return false
+    return !hasInvoiceAmountInHrp(invoice)
   }
 }
 
